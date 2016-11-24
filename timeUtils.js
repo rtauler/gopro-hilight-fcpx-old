@@ -9,8 +9,7 @@ function milToSec (mil){
 	return (mil/1000) % 60;
 }
 
-function getFormattedTime(mil){
+exports.getFormattedTime = function getFormattedTime(mil){
+
 	return milToMin(mil)+separator+milToSec(mil); 
 }
-
-exports.getFormattedTime = getFormattedTime;
