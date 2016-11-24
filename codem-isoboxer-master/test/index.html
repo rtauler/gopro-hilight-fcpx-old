@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <!-- <link href="" media="all" rel="stylesheet" /> -->
+  <script type="text/javascript" src="../dist/iso_boxer.js"></script>
+
+  <title>IsoBoxer</title>
+</head>
+
+<body>
+  <input type="file" id="fileInput" />
+  
+  <script type="text/javascript">
+    function handleFileSelect(evt) {
+      if (evt.target.files.length) {
+        var file = evt.target.files[0];
+      
+        var reader = new FileReader();
+        reader.onload = function() {
+          var t0 = new Date().getTime();
+          window.parsedFile = ISOBoxer.parseBuffer(reader.result);
+          var t1 = new Date().getTime();
+          document.body.innerHTML += "<br>Parsing complete (" + (t1-t0) + "ms). Please see the window.parsedFile variable in your browser console."
+        }
+        reader.readAsArrayBuffer(file);
+      }
+    }
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+  </script>
+</body>
+
+</html>
