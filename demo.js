@@ -1,4 +1,5 @@
 var GoProTagger = require('./gopro-tagging.js');
+var getFormattedTime = require('./timeUtils').getFormattedTime;
 var fs = require('fs');
 var util = require('util')
 var exec = require('child_process').exec;
@@ -8,20 +9,6 @@ var namePathCon = '';
 var child;
 var videoFilePath = './GOPR8172.MP4'; //replace your video path here
 var videoFileName = videoFilePath.match(/GOPR+\d{4}/g);
-var separator = ':';
-
-
-function milToMin (mil){
-    return (mil/1000/60) << 0;
-}
-
-function milToSec (mil){
-    return (mil/1000) % 60;
-}
-
-function getFormattedTime(mil){
-    return milToMin(mil)+separator+milToSec(mil); 
-}
 
 
 GoProTagger.getTag(videoFilePath, function(hilights, err){
