@@ -1,8 +1,28 @@
-
-
 var GoProTagger = require('./gopro-tagging.js');
+var fs = require('fs');
+var util = require('util')
+var exec = require('child_process').exec;
+var namePath = '';
+var namePathCon = '';
+
+var child;
 var videoFilePath = './GOPR8172.MP4'; //replace your video path here
-var getFormattedTime = require('./timeUtils').getFormattedTime;
+var videoFileName = videoFilePath.match(/GOPR+\d{4}/g);
+var separator = ':';
+
+
+function milToMin (mil){
+    return (mil/1000/60) << 0;
+}
+
+function milToSec (mil){
+    return (mil/1000) % 60;
+}
+
+function getFormattedTime(mil){
+    return milToMin(mil)+separator+milToSec(mil); 
+}
+
 
 GoProTagger.getTag(videoFilePath, function(hilights, err){
     if (err != undefined)
@@ -11,10 +31,31 @@ GoProTagger.getTag(videoFilePath, function(hilights, err){
     } 
     else
     {
-        console.log('This video has ' + hilights.length + ' HiLight tag(s)');
 
-        for(var i = 0, end = hilights.length; i < end; i++) {
-            console.log(getFormattedTime(hilights[i])) ;
+        console.log('This video has ' + hilights.length + ' HiLight tag(s)');
+        for(var i = 0;i < hilights.length;i++) {
+            // console.log('HiLight ' + i + ' @ ' + hilights[i] + ' millisecond');
+            console.log(getFormattedTime(hilights[i]));
+            namePath = getFormattedTime(hilights[i]);
+            namePathCon += namePath + ","; //ADDCONCATENATE;
+            finalExecute = "tag -a" + namePathCon + " " + videoFilePath;
+
+            child = exec(finalExecute, function (error) {
+            console.log(namePath);
+            console.log("Done!");
+            if (error !== null) {
+                console.log('exec error: ' + error);
+                }
+             });
+
+            // fs.appendFile("./"+ videoFileName, getFormattedTime(hilights[i]) + '\n', function(err) {
+            //     if(err) {
+            //         return console.log(err);
+            //     }
+
+            // console.log("The file was saved!");
+        // });
         }
+        
     }
 });
